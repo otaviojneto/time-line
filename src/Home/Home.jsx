@@ -4,22 +4,31 @@ import { Formik, Form } from "formik";
 
 import validationSchema from "./validationSchema";
 import { TextArea, TextField, TimeLine } from "../components";
+import initialValues from "./initialValues";
 
-const Home = (initialValues, onSubmit) => {
-  const [experience, setIsExperience] = useState(false);
-  const onSave = (data) => onSubmit(data);
+const Home = () => {
+  const [experience, setIsExperience] = useState([]);
+  const onSave = (data) => {
+    const form = document.forms.formulario;
+
+    setIsExperience((old) => [...old, data]);
+
+    form.reset();
+  };
 
   return (
     <Container>
       <h1>Professional Experiences</h1>
+
       <Box>
+        {console.log("experience", experience)}
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values) => onSave(values)}
         >
           {({ handleSubmit, errors }) => (
-            <Form>
+            <Form name="formulario">
               <Row>
                 <TextField
                   label="Nome da Empresa"
@@ -55,7 +64,7 @@ const Home = (initialValues, onSubmit) => {
               <Footer>
                 <Btn type="submit">Limpar</Btn>
 
-                <Btn primary onClick={() => handleSubmit(experience)}>
+                <Btn type="submit" primary onClick={() => handleSubmit()}>
                   Salvar
                 </Btn>
               </Footer>
@@ -64,7 +73,7 @@ const Home = (initialValues, onSubmit) => {
         </Formik>
       </Box>
 
-      {/* {experience.map((item) => (
+      {experience.map((item) => (
         <TimeLine
           company={item.companyName}
           office={item.office}
@@ -72,7 +81,7 @@ const Home = (initialValues, onSubmit) => {
           endDate={item.endDate}
           description={item.description}
         />
-      ))} */}
+      ))}
     </Container>
   );
 };
